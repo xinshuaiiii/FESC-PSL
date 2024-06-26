@@ -3,27 +3,31 @@ from sklearn.metrics import f1_score, jaccard_score, hamming_loss
 from joblib import load
 from sklearn.preprocessing import RobustScaler
 def merge_npy_files(file_path1, file_path2):
-    array1 = np.load(file_path1)
-    array2 = np.load(file_path2)
+    array1 = np.load(file_path1, allow_pickle=True)
+    array2 = np.load(file_path2, allow_pickle=True)
 
     # Horizontally concatenate the arrays
     merged_array = np.hstack([array1, array2])
 
     return merged_array
 
-file_path1 = 'psepssm.npy'
+
+file_path1 = 'psepssm-lamda.npy'
 file_path2 = 'prott5.npy'
 X_test = merge_npy_files(file_path1, file_path2)
+# X_test =np.load(file_path2)
 print("Shape of merged array:", X_test.shape)
 # Load the test features and labels
-with open('label.txt', 'r') as f:
+with open('label', 'r') as f:
     y_str = f.readlines()
+
 
 y_test = np.array([list(map(int, line.strip()[1:-1].split())) for line in y_str])
 
 
 # Load the trained model
-model = load('model.pkl')  
+# model = load('/home/zhaozhimiao/xs/pythonproject/multi_output_classifier_model_fasa-pos.pkl')
+model = load('lamda9.pkl')
 
 # Generate predictions
 y_pred = model.predict(X_test)
