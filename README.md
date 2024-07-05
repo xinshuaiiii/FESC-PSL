@@ -14,7 +14,9 @@ pip install -r requirements.txt
 ```
 
 #Feature Exaction：
-  To generate ProtT5 features, we need to download the ProtT5 model from https://github.com/agemagician/ProtTrans and set up the corresponding tokenizer and model path in the 'prott5-feature.py' file. The generated feature file will be named 'prott5.npy'.Then run: ```
+  To generate ProtT5 features, we need to download the ProtT5 model from https://github.com/agemagician/ProtTrans and set up the corresponding tokenizer and model path in the 'prott5-feature.py' file. The generated feature file will be named 'prott5.npy'.Then run: 
+  
+```
 python prott5-feature.py
 ```
 
