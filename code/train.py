@@ -84,7 +84,7 @@ class FASA:
         return virtual_label
 
 
-file_path2 = 'prott5.npy'
+file_path2 = 'seq-prott5.npy'
 with open('label.txt', 'r') as f:
     y_str = f.readlines()
 y = np.array([list(map(int, line.strip()[1:-1].split())) for line in y_str])
@@ -93,7 +93,7 @@ svm_classifier = SVC(kernel='rbf', C=10, gamma='scale')
 y_categorical = np.argmax(y, axis=1)
 
 for lamda in range(1, 11):
-    file_path1 = f'lamda{lamda}.npy'
+    file_path1 = f'psepssm-lamda{lamda}.npy'
     X = merge_npy_files(file_path1, file_path2)
     print(f"Processing lamda {lamda}, Shape of merged array:", X.shape)
 
@@ -109,25 +109,26 @@ for lamda in range(1, 11):
         X_train, X_test = X[train_index], X[test_index]
         y_train, y_test = y[train_index], y[test_index]
 
+
         fasa.adaptive_feature_enhancement(X_train, y_train)
         fasa.adaptive_feature_sampling(X_train, y_train)
         X_train_resampled, y_train_resampled = fasa.oversample_minority_samples(X_train, y_train)
 
-       
+
         multi_output_classifier = MultiOutputClassifier(svm_classifier)
         multi_output_classifier.fit(X_train_resampled, y_train_resampled)
 
-       
+
         y_pred = multi_output_classifier.predict(X_test)
 
-    
+
         macro_f1 = f1_score(y_test, y_pred, average='macro')
 
-       
+
         if macro_f1 > best_f1:
             best_f1 = macro_f1
             best_model = multi_output_classifier
 
-    
+
     joblib.dump(best_model, f'lamda{lamda}.pkl')
-    print(f" lamda {lamda}，Macro F1 为:", best_f1)
+    print(f"best lamda {lamda}，Macro F1 :", best_f1)
